@@ -5,9 +5,18 @@
   "repository": "https://github.com/ez1211/backend.git",
   "author": "Dusty Paper Box <sora1211x@gamil.com>",
   "license": "MIT",
-  "dependencies": {},
+  "type": "module",
+  "dependencies": {
+    "koa": "^2.13.4",
+    "koa-router": "^10.1.1"
+  },
   "devDependencies": {
     "eslint": "^8.1.0",
-    "eslint-config-prettier": "^8.3.0"
+    "eslint-config-prettier": "^8.3.0",
+    "nodemon": "^2.0.14"
+  },
+  "scripts": {
+    "start": "node src",
+    "start:dev": "nodemon --watch src/ src/index.js"
   }
 }
