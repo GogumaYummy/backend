@@ -7,10 +7,12 @@
   "license": "MIT",
   "dependencies": {
     "koa": "^2.13.4",
+    "koa-bodyparser": "^4.3.0",
     "koa-router": "^10.1.1"
   },
   "devDependencies": {
     "@types/koa": "^2.13.4",
+    "@types/koa-bodyparser": "^4.3.4",
     "@types/koa-router": "^7.4.4",
     "@typescript-eslint/eslint-plugin": "^5.2.0",
     "@typescript-eslint/parser": "^5.2.0",
@@ -22,6 +24,6 @@
   },
   "scripts": {
     "start": "ts-node src/index.ts",
-    "start:dev": "nodemon --watch /src --exec ts-node src"
+    "start:dev": "nodemon --watch *.ts --exec ts-node src/index.ts"
   }
 }
