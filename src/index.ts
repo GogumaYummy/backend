@@ -1,6 +1,6 @@
 import Koa from 'koa';
 import Router from 'koa-router';
-import api from './api/index.js';
+import api from './api';
 
 const app = new Koa();
 const router = new Router();
