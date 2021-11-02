@@ -20,6 +20,8 @@ if (typeof MONGO_URI === 'string') {
     .catch((e) => {
       console.error(e);
     });
+} else {
+  console.error('URI is not a string');
 }
 
 router.use('/api', api.routes());
