@@ -2041,6 +2041,11 @@ tr46@^2.1.0:
   dependencies:
     punycode "^2.1.1"
 
+ts-mongoose@^0.0.24:
+  version "0.0.24"
+  resolved "https://registry.yarnpkg.com/ts-mongoose/-/ts-mongoose-0.0.24.tgz#d6d1d4c5c62669560a3f3e26c0dd8a7365d1aee4"
+  integrity sha512-BaiyNFqieRqEBnvj2pgWB6/eQJRm7U18kAzDJ92/sfcFx1aQBZeZztzutxr49VVlUvPHxukleIoU/t3VMCBsSA==
+
 ts-node@^10.4.0:
   version "10.4.0"
   resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-10.4.0.tgz#680f88945885f4e6cf450e7f0d6223dd404895f7"
