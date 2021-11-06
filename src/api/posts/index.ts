@@ -8,7 +8,6 @@ posts
   .post('/', postsCtrl.write)
   .get('/:id', postsCtrl.read)
   .delete('/:id', postsCtrl.remove)
-  .put('/:id', postsCtrl.replace)
   .patch('/:id', postsCtrl.update);
 
 export default posts;
