@@ -1,7 +1,34 @@
+import Joi from 'joi';
 import { IMiddleware } from 'koa-router';
+import { Types } from 'mongoose';
 import Post from '../../models/post';
 
+const { isValid } = Types.ObjectId;
+
+export const checkObjectId: IMiddleware = (ctx, next) => {
+  const { id } = ctx.params;
+  if (!isValid(id)) {
+    ctx.status = 400;
+    return;
+  }
+  return next();
+};
+
 export const write: IMiddleware = async (ctx) => {
+  const schema = Joi.object().keys({
+    title: Joi.string().required(),
+    body: Joi.string().required(),
+    tags: Joi.array().items(Joi.string()).required(),
+  });
+
+  const result = schema.validate(ctx.request.body);
+
+  if (result.error) {
+    ctx.status = 400;
+    ctx.body = result.error;
+    return;
+  }
+
   const { title, body, tags } = ctx.request.body;
   const post = new Post({
     title,
@@ -53,6 +80,19 @@ export const remove: IMiddleware = async (ctx) => {
 };
 
 export const update: IMiddleware = async (ctx) => {
+  const schema = Joi.object().keys({
+    title: Joi.string(),
+    body: Joi.string(),
+    tags: Joi.array().items(Joi.string()),
+  });
+
+  const result = schema.validate(ctx.request.body);
+
+  if (result.error) {
+    ctx.status = 400;
+    ctx.body = result.error;
+    return;
+  }
   const { id } = ctx.params;
 
   try {
