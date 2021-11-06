@@ -8,7 +8,5 @@ const PostSchema = createSchema({
 });
 
 const Post = typedModel('Post', PostSchema);
-<<<<<<< HEAD
+
 export default Post;
-=======
->>>>>>> 0d678d66699a48299823533985831681cdd0a7d9
