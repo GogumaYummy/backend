@@ -2,7 +2,6 @@ import Joi from 'joi';
 import { IMiddleware } from 'koa-router';
 import { Types } from 'mongoose';
 import Post from '../../models/post';
-
 const { isValid } = Types.ObjectId;
 
 export const checkObjectId: IMiddleware = (ctx, next) => {
@@ -40,16 +39,42 @@ export const write: IMiddleware = async (ctx) => {
     await post.save();
     ctx.body = post;
   } catch (e) {
-    ctx.throw(500, e as Error);
+    if (e instanceof Error) {
+      ctx.throw(500, e);
+    }
   }
 };
 
 export const list: IMiddleware = async (ctx) => {
+  if (Array.isArray(ctx.query.page)) {
+    ctx.status = 400;
+    return;
+  }
+  const page: number = parseInt(ctx.query.page || '1', 10);
+
+  if (page < 1) {
+    ctx.status = 400;
+    return;
+  }
+
   try {
-    const posts = await Post.find().exec();
-    ctx.body = posts;
+    const posts = await Post.find()
+      .sort({ _id: -1 })
+      .limit(10)
+      .skip((page - 1) * 10)
+      .lean()
+      .exec();
+    const postCount: number = await Post.countDocuments().exec();
+    ctx.set('Last-Page', String(Math.ceil(postCount / 10)));
+    ctx.body = posts.map((post) => ({
+      ...post,
+      body:
+        post.body.length < 200 ? post.body : `${post.body.slice(0, 200)}...`,
+    }));
   } catch (e) {
-    ctx.throw(500, e as Error);
+    if (e instanceof Error) {
+      ctx.throw(500, e);
+    }
   }
 };
 
@@ -64,7 +89,9 @@ export const read: IMiddleware = async (ctx) => {
     }
     ctx.body = post;
   } catch (e) {
-    ctx.throw(500, e as Error);
+    if (e instanceof Error) {
+      ctx.throw(500, e);
+    }
   }
 };
 
@@ -75,7 +102,9 @@ export const remove: IMiddleware = async (ctx) => {
     await Post.findByIdAndRemove(id).exec();
     ctx.status = 204;
   } catch (e) {
-    ctx.throw(500, e as Error);
+    if (e instanceof Error) {
+      ctx.throw(500, e);
+    }
   }
 };
 
@@ -105,6 +134,8 @@ export const update: IMiddleware = async (ctx) => {
     }
     ctx.body = post;
   } catch (e) {
-    ctx.throw(500, e as Error);
+    if (e instanceof Error) {
+      ctx.throw(500, e);
+    }
   }
 };

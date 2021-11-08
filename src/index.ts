@@ -4,6 +4,7 @@ import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
 import Router from 'koa-router';
 import api from './api';
+import createFakeData from './util/createFakeData';
 
 dotenv.config();
 const app = new Koa();
@@ -11,18 +12,15 @@ const router = new Router();
 
 const { PORT, MONGO_URI } = process.env;
 
-if (typeof MONGO_URI === 'string') {
-  mongoose
-    .connect(MONGO_URI)
-    .then(() => {
-      console.log('Connected to MongoDB');
-    })
-    .catch((e) => {
-      console.error(e);
-    });
-} else {
-  console.error('URI is not a string');
-}
+mongoose
+  .connect(MONGO_URI as string)
+  .then(() => {
+    console.log('Connected to MongoDB');
+    createFakeData();
+  })
+  .catch((e) => {
+    console.error(e);
+  });
 
 router.use('/api', api.routes());
 
