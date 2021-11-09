@@ -1,11 +1,13 @@
-import mongoose, { Schema, Document, Model } from 'mongoose';
+import mongoose, { Schema, Document, Model, FlattenMaps } from 'mongoose';
 import bcrypt from 'bcrypt';
+import { LeanDocument } from 'mongoose';
 
 export interface IUser extends Document {
   username: string;
-  hashedPassword: string;
+  hashedPassword?: string;
   setPassword: (password: string) => Promise<void>;
   checkPassword: (password: string) => Promise<boolean>;
+  serialize: () => Promise<any>;
 }
 
 export interface IUserModel extends Model<IUser> {
@@ -25,6 +27,12 @@ UserSchema.methods.setPassword = async function (password: string) {
 UserSchema.methods.checkPassword = async function (password: string) {
   const result = await bcrypt.compare(password, this.hashedPassword);
   return result;
+};
+
+UserSchema.methods.serialize = function () {
+  const data = this.toJSON();
+  delete data.hashedPassword;
+  return data;
 };
 
 UserSchema.statics.findByUsername = async function (username: string) {
