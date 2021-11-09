@@ -1,12 +1,21 @@
-import { createSchema, Type, typedModel } from 'ts-mongoose';
+import mongoose, { Document, Schema } from 'mongoose';
 
-const PostSchema = createSchema({
-  title: Type.string({ required: true }),
-  body: Type.string({ required: true }),
-  tags: Type.array().of(Type.string()),
-  publishedDate: Type.date({ default: Date.now(), required: true }),
+export interface IPost extends Document {
+  title: string;
+  body: string;
+  tags: string[];
+  publishedDate: number;
+}
+
+const PostSchema = new Schema({
+  title: String,
+  body: String,
+  tags: [String],
+  publishedDate: {
+    type: Number,
+    default: Date.now(),
+  },
 });
 
-const Post = typedModel('Post', PostSchema);
-
+const Post = mongoose.model<IPost>('Post', PostSchema);
 export default Post;
