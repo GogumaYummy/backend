@@ -1,8 +1,8 @@
 import Joi from 'joi';
-import { IMiddleware } from 'koa-router';
+import { Middleware } from 'koa';
 import User from '../../models/user';
 
-export const register: IMiddleware = async (ctx) => {
+export const register: Middleware = async (ctx) => {
   const schema = Joi.object().keys({
     username: Joi.string().alphanum().min(3).max(20).required(),
     password: Joi.string().required(),
@@ -29,13 +29,19 @@ export const register: IMiddleware = async (ctx) => {
     await user.save();
 
     ctx.body = user.serialize();
-  } catch (e) {
-    if (e instanceof Error) {
-      ctx.throw(500, e);
+
+    const token = user.generateToken();
+    ctx.cookies.set('access_token', token, {
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+      httpOnly: true,
+    });
+  } catch (err) {
+    if (err instanceof Error) {
+      ctx.throw(500, err);
     }
   }
 };
-export const login: IMiddleware = async (ctx) => {
+export const login: Middleware = async (ctx) => {
   const { username, password } = ctx.request.body;
 
   const schema = Joi.object().keys({
@@ -62,11 +68,17 @@ export const login: IMiddleware = async (ctx) => {
       return;
     }
     ctx.body = user.serialize();
-  } catch (e) {
-    if (e instanceof Error) {
-      ctx.throw(500, e);
+
+    const token = user.generateToken();
+    ctx.cookies.set('access_token', token, {
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+      httpOnly: true,
+    });
+  } catch (err) {
+    if (err instanceof Error) {
+      ctx.throw(500, err);
     }
   }
 };
-export const check: IMiddleware = async (ctx) => {};
-export const logout: IMiddleware = async (ctx) => {};
+export const check: Middleware = async (ctx) => {};
+export const logout: Middleware = async (ctx) => {};

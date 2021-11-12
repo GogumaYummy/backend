@@ -1,10 +1,10 @@
 import Joi from 'joi';
-import { IMiddleware } from 'koa-router';
+import { Middleware } from 'koa';
 import { Types } from 'mongoose';
 import Post from '../../models/post';
 const { isValid } = Types.ObjectId;
 
-export const checkObjectId: IMiddleware = (ctx, next) => {
+export const checkObjectId: Middleware = (ctx, next) => {
   const { id } = ctx.params;
   if (!isValid(id)) {
     ctx.status = 400;
@@ -13,7 +13,7 @@ export const checkObjectId: IMiddleware = (ctx, next) => {
   return next();
 };
 
-export const write: IMiddleware = async (ctx) => {
+export const write: Middleware = async (ctx) => {
   const schema = Joi.object().keys({
     title: Joi.string().required(),
     body: Joi.string().required(),
@@ -45,7 +45,7 @@ export const write: IMiddleware = async (ctx) => {
   }
 };
 
-export const list: IMiddleware = async (ctx) => {
+export const list: Middleware = async (ctx) => {
   if (Array.isArray(ctx.query.page)) {
     ctx.status = 400;
     return;
@@ -78,7 +78,7 @@ export const list: IMiddleware = async (ctx) => {
   }
 };
 
-export const read: IMiddleware = async (ctx) => {
+export const read: Middleware = async (ctx) => {
   const { id } = ctx.params;
 
   try {
@@ -95,7 +95,7 @@ export const read: IMiddleware = async (ctx) => {
   }
 };
 
-export const remove: IMiddleware = async (ctx) => {
+export const remove: Middleware = async (ctx) => {
   const { id } = ctx.params;
 
   try {
@@ -108,7 +108,7 @@ export const remove: IMiddleware = async (ctx) => {
   }
 };
 
-export const update: IMiddleware = async (ctx) => {
+export const update: Middleware = async (ctx) => {
   const schema = Joi.object().keys({
     title: Joi.string(),
     body: Joi.string(),
