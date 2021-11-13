@@ -4,7 +4,7 @@ import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
 import Router from 'koa-router';
 import api from './api';
-import createFakeData from './util/createFakeData';
+import jwtMiddleware from './lib/jwtMiddleware';
 
 dotenv.config();
 const app = new Koa();
@@ -16,7 +16,6 @@ mongoose
   .connect(MONGO_URI as string)
   .then(() => {
     console.log('Connected to MongoDB');
-    createFakeData();
   })
   .catch((e) => {
     console.error(e);
@@ -24,7 +23,11 @@ mongoose
 
 router.use('/api', api.routes());
 
-app.use(bodyParser()).use(router.routes()).use(router.allowedMethods());
+app
+  .use(bodyParser())
+  .use(jwtMiddleware)
+  .use(router.routes())
+  .use(router.allowedMethods());
 
 const port = PORT || 5001;
 

@@ -5,6 +5,10 @@ export interface IPost extends Document {
   body: string;
   tags: string[];
   publishedDate: number;
+  user: {
+    _id: mongoose.Types.ObjectId;
+    username: string;
+  };
 }
 
 const PostSchema = new Schema({
@@ -14,6 +18,10 @@ const PostSchema = new Schema({
   publishedDate: {
     type: Number,
     default: Date.now(),
+  },
+  user: {
+    _id: mongoose.Types.ObjectId,
+    username: String,
   },
 });
 

@@ -80,5 +80,15 @@ export const login: Middleware = async (ctx) => {
     }
   }
 };
-export const check: Middleware = async (ctx) => {};
-export const logout: Middleware = async (ctx) => {};
+export const check: Middleware = async (ctx) => {
+  const { user } = ctx.state;
+  if (!user) {
+    ctx.status = 401;
+    return;
+  }
+  ctx.body = user;
+};
+export const logout: Middleware = async (ctx) => {
+  ctx.cookies.set('access_token');
+  ctx.status = 204;
+};
