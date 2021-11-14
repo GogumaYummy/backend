@@ -1,3 +1,5 @@
+/* cSpell: disable */
+
 import Post from '../models/post';
 
 export default function createFakeData() {
